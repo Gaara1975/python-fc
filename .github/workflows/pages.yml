@@ -1,0 +1,58 @@
+name: Deploy GitHub Pages
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble site
+        run: |
+          python3 << 'PY'
+          from pathlib import Path
+          import base64
+          from collections import defaultdict
+          payload = Path("payload")
+          parts = sorted(payload.glob("index.part*"))
+          html = "".join(p.read_text(encoding="utf-8") for p in parts)
+          Path("index.html").write_text(html, encoding="utf-8")
+          print("index.html", len(html))
+          chunks = defaultdict(list)
+          for p in sorted(payload.iterdir()):
+              n = p.name
+              if n.startswith("index.part"):
+                  continue
+              if ".jpg.b64." in n:
+                  key = n.split(".jpg.b64.")[0] + ".jpg"
+                  chunks[key].append(p.read_text())
+              elif n.endswith(".jpg.b64"):
+                  key = n[:-4]
+                  chunks[key].append(p.read_text())
+          Path("assets").mkdir(exist_ok=True)
+          for name, parts_b64 in chunks.items():
+              raw = base64.b64decode("".join(parts_b64))
+              dest = Path("assets") / name
+              dest.write_bytes(raw)
+              print("wrote", dest, dest.stat().st_size)
+          import shutil
+          shutil.copyfile("assets/maldini.jpg", "assets/hero.jpg")
+          print("hero.jpg copied")
+          PY
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
