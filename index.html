@@ -50,6 +50,52 @@
     font-family:"Syne", "Outfit", sans-serif;
   }
 
+
+  /* Dim legend film — visible as atmosphere, not a full clip */
+  .legend-film{
+    position:fixed;
+    inset:-4%;
+    z-index:-3;
+    pointer-events:none;
+    overflow:hidden;
+    background:#070708;
+  }
+  .legend-film img{
+    position:absolute;
+    inset:-6%;
+    width:112%;
+    height:112%;
+    object-fit:cover;
+    object-position:center 20%;
+    opacity:0;
+    filter:saturate(1.15) contrast(1.05) brightness(.55) blur(1.5px);
+    transform:scale(1.08);
+    transition:opacity 1.6s ease;
+  }
+  .legend-film img.on{
+    opacity:.38;
+    animation:filmDrift 16s ease-in-out infinite alternate;
+  }
+  .legend-film-shade{
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(ellipse at center, transparent 20%, rgba(7,7,8,.55) 70%, #070708 100%),
+      linear-gradient(to bottom, rgba(7,7,8,.72) 0%, rgba(7,7,8,.45) 28%, rgba(7,7,8,.78) 100%);
+  }
+  .legend-film-shade::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    opacity:.18;
+    background-image:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay;
+  }
+  @keyframes filmDrift{
+    from{transform:scale(1.06) translate3d(0,0,0)}
+    to{transform:scale(1.16) translate3d(-2.2%,-1.4%,0)}
+  }
+
   /* Living background layers */
   body::before{
     content:"";
@@ -892,6 +938,11 @@
 </style>
 </head>
 <body>
+<div class="legend-film" id="legend-film" aria-hidden="true">
+  <img id="film-a" alt="">
+  <img id="film-b" alt="">
+  <div class="legend-film-shade"></div>
+</div>
  
 <nav class="site-nav">
   <div class="nav-inner">
@@ -1344,6 +1395,21 @@
   let legendIndex = 0;
   let legendTimer = null;
 
+
+  function setFilm(src, fallback){
+    const a = $("film-a");
+    const b = $("film-b");
+    if(!a || !b) return;
+    const incoming = a.classList.contains("on") ? b : a;
+    const outgoing = incoming === a ? b : a;
+    incoming.onerror = function(){
+      if(fallback && incoming.src !== fallback) incoming.src = fallback;
+    };
+    if(incoming.getAttribute("src") !== src) incoming.src = src;
+    incoming.classList.add("on");
+    outgoing.classList.remove("on");
+  }
+
   function showLegend(i, isFirst){
     const L = LEGENDS[i];
     const box = $("hero-legend");
@@ -1359,6 +1425,7 @@
         if(L.fallback && img.src !== L.fallback) img.src = L.fallback;
       };
       img.src = L.img;
+      setFilm(L.img, L.fallback);
       box.classList.add("entering");
       img.classList.add("fade-in");
       setTimeout(() => {
@@ -1385,6 +1452,7 @@
         if(L.fallback && img.src !== L.fallback) img.src = L.fallback;
       };
       img.src = L.img;
+      setFilm(L.img, L.fallback);
 
       // natural fade in
       box.classList.remove("leaving");
@@ -1423,6 +1491,16 @@
   })();
 
   startLegendCarousel();
+
+  (function(){
+    const film = document.getElementById("legend-film");
+    if(!film || window.matchMedia("(pointer: coarse)").matches) return;
+    window.addEventListener("pointermove", (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 18;
+      const y = (e.clientY / window.innerHeight - 0.5) * 12;
+      film.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px)";
+    }, {passive:true});
+  })();
  
   /* alive: scroll reveal */
   const revealObserver = new IntersectionObserver((entries) => {
