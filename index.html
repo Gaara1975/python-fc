@@ -41,7 +41,7 @@
     min-height:100vh;
     overflow-x:hidden;
     color:var(--white);
-    background: var(--bg);
+    background:transparent;
     font-family:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     -webkit-font-smoothing:antialiased;
     letter-spacing:.01em;
@@ -54,34 +54,34 @@
   /* Dim legend film — visible as atmosphere, not a full clip */
   .legend-film{
     position:fixed;
-    inset:-4%;
-    z-index:-3;
+    inset:0;
+    z-index:0;
     pointer-events:none;
     overflow:hidden;
     background:#070708;
   }
-  .legend-film img{
+  .legend-film iframe{
     position:absolute;
-    inset:-6%;
-    width:112%;
-    height:112%;
-    object-fit:cover;
-    object-position:center 20%;
+    top:50%;
+    left:50%;
+    width:130vw;
+    height:130vh;
+    min-width:177.78vh;
+    min-height:56.25vw;
+    transform:translate(-50%,-50%);
+    border:0;
+    pointer-events:none;
     opacity:0;
-    filter:saturate(1.15) contrast(1.05) brightness(.55) blur(1.5px);
-    transform:scale(1.08);
-    transition:opacity 1.6s ease;
+    filter:saturate(1.15) contrast(1.08) brightness(.78);
+    transition:opacity 1.1s ease;
   }
-  .legend-film img.on{
-    opacity:.38;
-    animation:filmDrift 16s ease-in-out infinite alternate;
-  }
+  .legend-film iframe.on{opacity:1}
   .legend-film-shade{
     position:absolute;
     inset:0;
     background:
-      radial-gradient(ellipse at center, transparent 20%, rgba(7,7,8,.55) 70%, #070708 100%),
-      linear-gradient(to bottom, rgba(7,7,8,.72) 0%, rgba(7,7,8,.45) 28%, rgba(7,7,8,.78) 100%);
+      radial-gradient(ellipse at 70% 42%, rgba(7,7,8,.15) 0%, rgba(7,7,8,.55) 62%, #070708 100%),
+      linear-gradient(to bottom, rgba(7,7,8,.55) 0%, rgba(7,7,8,.28) 32%, rgba(7,7,8,.72) 100%);
   }
   .legend-film-shade::after{
     content:"";
@@ -233,6 +233,8 @@
  
   /* HERO */
   .hero{
+    position:relative;
+    z-index:1;
     max-width:1180px;
     margin:18px auto 0;
     padding:0 22px;
@@ -244,9 +246,7 @@
     border:1px solid rgba(225,6,0,.25);
     border-radius:18px;
     background:
-      linear-gradient(105deg,rgba(7,7,8,.97) 0%,rgba(7,7,8,.88) 32%,rgba(7,7,8,.35) 58%,rgba(7,7,8,.75) 100%),
-      radial-gradient(ellipse at 70% 40%, rgba(225,6,0,.18), transparent 55%),
-      #0a0a0c;
+      linear-gradient(105deg,rgba(7,7,8,.9) 0%,rgba(7,7,8,.62) 36%,rgba(7,7,8,.18) 68%,rgba(7,7,8,.45) 100%);
     box-shadow:0 24px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
   }
   .hero-card::before{
@@ -365,12 +365,12 @@
   }
  
   .hero-image{
+    display:none;
     position:absolute;
     z-index:2;
     top:0;right:0;
     width:60%;
     height:100%;
-    display:flex;
     align-items:flex-end;
     justify-content:flex-end;
     pointer-events:none;
@@ -487,7 +487,8 @@
   }
  
   /* MAIN */
-  main{max-width:1180px;margin:0 auto;padding:60px 22px 100px}
+  .quickbar{position:relative;z-index:1}
+  main{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:60px 22px 100px}
   section{margin-bottom:58px;scroll-margin-top:90px}
   .section-head{
     display:flex;
@@ -806,6 +807,7 @@
   }
   .contact-email:hover{box-shadow:0 0 28px rgba(39,232,223,.22);transform:translateY(-1px)}
   footer{
+    position:relative;z-index:1;
     border-top:1px solid var(--line);
     padding:26px 22px;
     color:var(--muted);
@@ -939,8 +941,8 @@
 </head>
 <body>
 <div class="legend-film" id="legend-film" aria-hidden="true">
-  <img id="film-a" alt="">
-  <img id="film-b" alt="">
+  <iframe id="film-a" title="Legend match clip" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  <iframe id="film-b" title="Legend match clip" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
   <div class="legend-film-shade"></div>
 </div>
  
@@ -1351,6 +1353,7 @@
       role: "LEGEND · DEFENCE",
       traits: "COMPOSURE · POSITIONING · LEADERSHIP",
       quote: "Base your game on having a strong defence.",
+      clip: "ntsWpsSzk98", clipStart: 18,
       img: "assets/maldini.jpg",
       fallback: "https://upload.wikimedia.org/wikipedia/commons/1/1c/PaoloMaldini.jpg"
     },
@@ -1360,6 +1363,7 @@
       role: "LEGEND · FORWARD",
       traits: "CONFIDENCE · POWER · CHARISMA",
       quote: "I came like a king, left like a legend.",
+      clip: "VU5gQPqrDn0", clipStart: 12,
       img: "assets/zlatan.jpg",
       fallback: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Zlatan_Ibrahimovi%C4%87_June_2018.jpg"
     },
@@ -1369,6 +1373,7 @@
       role: "LEGEND · ATTACKING MID",
       traits: "VISION · ELEGANCE · FAITH",
       quote: "I belong to Jesus.",
+      clip: "qI3l1yP87sI", clipStart: 8,
       img: "assets/kaka.jpg",
       fallback: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Kaka_of_AC_Milan%2C_April_19%2C_2009.jpg"
     },
@@ -1378,6 +1383,7 @@
       role: "LEGEND · MIDFIELD",
       traits: "INTENSITY · GRIT · PASSION",
       quote: "We cannot have players who don't give their soul.",
+      clip: "z8JZE9cJv8s", clipStart: 4,
       img: "assets/gattuso.jpg",
       fallback: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Italy_vs_France_-_FIFA_World_Cup_2006_final_-_Gennaro_Gattuso.jpg"
     },
@@ -1387,6 +1393,7 @@
       role: "LEGEND · DEFENCE",
       traits: "ELEGANCE · ANTICIPATION · CLASS",
       quote: "You always play to win.",
+      clip: "i0Z18M35ZWk", clipStart: 20,
       img: "assets/nesta.jpg",
       fallback: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Alessandro_Nesta_06052007.jpg"
     }
@@ -1396,15 +1403,21 @@
   let legendTimer = null;
 
 
-  function setFilm(src, fallback){
+  function clipSrc(id, start){
+    const s = start || 8;
+    return "https://www.youtube-nocookie.com/embed/" + id
+      + "?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1"
+      + "&loop=1&playlist=" + id
+      + "&start=" + s
+      + "&iv_load_policy=3&fs=0&disablekb=1";
+  }
+  function setFilm(id, start){
     const a = $("film-a");
     const b = $("film-b");
-    if(!a || !b) return;
+    if(!a || !b || !id) return;
+    const src = clipSrc(id, start);
     const incoming = a.classList.contains("on") ? b : a;
     const outgoing = incoming === a ? b : a;
-    incoming.onerror = function(){
-      if(fallback && incoming.src !== fallback) incoming.src = fallback;
-    };
     if(incoming.getAttribute("src") !== src) incoming.src = src;
     incoming.classList.add("on");
     outgoing.classList.remove("on");
@@ -1425,7 +1438,7 @@
         if(L.fallback && img.src !== L.fallback) img.src = L.fallback;
       };
       img.src = L.img;
-      setFilm(L.img, L.fallback);
+      setFilm(L.clip, L.clipStart);
       box.classList.add("entering");
       img.classList.add("fade-in");
       setTimeout(() => {
@@ -1452,7 +1465,7 @@
         if(L.fallback && img.src !== L.fallback) img.src = L.fallback;
       };
       img.src = L.img;
-      setFilm(L.img, L.fallback);
+      setFilm(L.clip, L.clipStart);
 
       // natural fade in
       box.classList.remove("leaving");
@@ -1472,7 +1485,7 @@
     legendTimer = setInterval(() => {
       legendIndex = (legendIndex + 1) % LEGENDS.length;
       showLegend(legendIndex, false);
-    }, 6500); // each legend stays ~6.5 seconds
+    }, 22000);
   }
 
   // pause on hover so users can read the quote
@@ -1485,7 +1498,7 @@
         legendTimer = setInterval(() => {
           legendIndex = (legendIndex + 1) % LEGENDS.length;
           showLegend(legendIndex, false);
-        }, 6500);
+        }, 22000);
       });
     }
   })();
