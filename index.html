@@ -51,33 +51,6 @@
   }
 
 
-  /* Living background layers */
-  body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:-2;
-    opacity:.22;
-    background-image:
-      linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);
-    background-size:52px 52px;
-    mask-image:linear-gradient(to bottom,black,transparent 80%);
-  }
-  body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:-1;
-    background:
-      radial-gradient(ellipse 70% 45% at 90% -5%, rgba(225,6,0,.16), transparent 55%),
-      radial-gradient(ellipse 60% 40% at 5% 20%, rgba(225,6,0,.12), transparent 50%),
-      radial-gradient(ellipse 50% 35% at 60% 85%, rgba(225,6,0,.08), transparent 55%),
-      radial-gradient(ellipse 40% 30% at 20% 70%, rgba(255,45,45,.06), transparent 50%);
-    animation: bgDrift 22s ease-in-out infinite alternate;
-  }
 
   a{color:inherit;text-decoration:none}
   button,input,select,textarea{font:inherit}
@@ -98,24 +71,24 @@
   @keyframes pulseDot{0%,100%{opacity:1;box-shadow:0 0 14px var(--red)}50%{opacity:.45;box-shadow:0 0 4px var(--red)}}
   @keyframes popIn{from{opacity:0;transform:scale(.94) translateY(6px)}to{opacity:1;transform:none}}
   @keyframes legendIn{
-    0%{opacity:0; transform:translateY(18px); filter:blur(6px)}
-    100%{opacity:1; transform:translateY(0); filter:blur(0)}
+    0%{opacity:0; transform:translateY(10px)}
+    100%{opacity:1; transform:none}
   }
   @keyframes legendOut{
-    0%{opacity:1; transform:translateY(0); filter:blur(0)}
-    100%{opacity:0; transform:translateY(-12px); filter:blur(5px)}
+    0%{opacity:1}
+    100%{opacity:0}
   }
   @keyframes softGlow{
     0%,100%{opacity:.5; transform:scale(1)}
     50%{opacity:.95; transform:scale(1.1)}
   }
   @keyframes imgFadeOut{
-    0%{opacity:.91; transform:scale(1)}
-    100%{opacity:0; transform:scale(1.06)}
+    from{opacity:.91}
+    to{opacity:0}
   }
   @keyframes imgFadeIn{
-    0%{opacity:0; transform:scale(1.06)}
-    100%{opacity:.91; transform:scale(1)}
+    from{opacity:0}
+    to{opacity:.91}
   }
  
   /* scroll reveal */
@@ -127,9 +100,8 @@
     position:sticky;
     top:0;
     z-index:1000;
-    background:rgba(7,7,8,.88);
+    background:#0c0a0c;
     border-bottom:1px solid rgba(225,6,0,.35);
-    backdrop-filter:blur(18px);
     box-shadow:0 1px 0 rgba(225,6,0,.15), 0 10px 40px rgba(0,0,0,.35);
   }
   .site-nav::before{
@@ -201,28 +173,10 @@
     border:1px solid rgba(225,6,0,.25);
     border-radius:18px;
     background:
-      linear-gradient(105deg,rgba(7,7,8,.9) 0%,rgba(7,7,8,.62) 36%,rgba(7,7,8,.18) 68%,rgba(7,7,8,.45) 100%);
+      linear-gradient(105deg,rgba(7,7,8,.97) 0%,rgba(7,7,8,.88) 32%,rgba(7,7,8,.35) 58%,rgba(7,7,8,.75) 100%),
+      radial-gradient(ellipse at 70% 40%, rgba(225,6,0,.18), transparent 55%),
+      #0a0a0c;
     box-shadow:0 24px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
-  }
-  .hero-card::before{
-    content:"";
-    position:absolute;
-    width:600px;height:600px;
-    right:-220px;top:-240px;
-    border-radius:50%;
-    background:rgba(225,6,0,.2);
-    filter:blur(100px);
-    animation:floatA 16s ease-in-out infinite, softGlow 9s ease-in-out infinite;
-  }
-  .hero-card::after{
-    content:"";
-    position:absolute;
-    width:480px;height:480px;
-    left:-200px;bottom:-260px;
-    border-radius:50%;
-    background:rgba(225,6,0,.12);
-    filter:blur(90px);
-    animation:floatB 18s ease-in-out infinite, softGlow 11s ease-in-out infinite reverse;
   }
   /* geometric club accents */
   .hero-card .hero-x-pattern{
@@ -320,7 +274,7 @@
   }
  
   .hero-image{
-    display:none;
+    display:flex;
     position:absolute;
     z-index:2;
     top:0;right:0;
@@ -500,7 +454,6 @@
     top:-70px;right:-50px;
     border-radius:50%;
     background:rgba(225,6,0,.2);
-    filter:blur(24px);
   }
   .staff-role{
     position:relative;
@@ -612,8 +565,7 @@
     padding:22px 14px;
     overflow:auto;
     background:rgba(0,0,0,.8);
-    backdrop-filter:blur(10px);
-  }
+      }
   .modal-backdrop.open{display:flex}
   .modal{
     width:100%;
@@ -1408,7 +1360,7 @@
     legendTimer = setInterval(() => {
       legendIndex = (legendIndex + 1) % LEGENDS.length;
       showLegend(legendIndex, false);
-    }, 22000);
+    }, 6500);
   }
 
   // pause on hover so users can read the quote
@@ -1421,7 +1373,7 @@
         legendTimer = setInterval(() => {
           legendIndex = (legendIndex + 1) % LEGENDS.length;
           showLegend(legendIndex, false);
-        }, 22000);
+        }, 6500);
       });
     }
   })();
